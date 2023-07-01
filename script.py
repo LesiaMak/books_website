@@ -55,8 +55,12 @@ def get_title(url):
         title_tag = soup.find('table', class_='tabs').find('td', class_='ow_px_td').find('h1')
         title_text = title_tag.text
         splited_text = title_text.split('::')
-        title = splited_text[0].rstrip(' \xa0')        
-        return title
+        title = splited_text[0].rstrip(' \xa0')
+        book_genre =[] 
+        genres = soup.find('span', class_='d_book').find_all('a')
+        for genre in genres:
+            book_genre.append(genre.text)
+        return print(title), print(book_genre)
     else:
         raise requests.HTTPError("Book havent found")
 
@@ -78,8 +82,7 @@ for i in range(1, 10):
     try:
         title_url = 'https://tululu.org/b{}/'.format(i)
         txt_url = 'https://tululu.org/txt.php?id={}'.format(i)
-        comments = get_comments(title_url)
-        print(comments)
+        title = get_title(title_url)
     except requests.HTTPError:
         pass
 
