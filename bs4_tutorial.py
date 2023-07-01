@@ -9,12 +9,18 @@ response.raise_for_status()
 soup = BeautifulSoup(response.text, 'lxml')
 title_tag = soup.find('table', class_='tabs').find('td', class_='ow_px_td').find('h1')
 image_link = soup.find('div', class_='bookimage').find('img')['src']
+comments = soup.find_all('div', {'class': 'texts'})
+for comment in comments:
+	comment_text = comment.text
+	splited_comment = comment_text.split(')')
+	print(splited_comment[-1])
 title_text = title_tag.text
 splited_text = title_text.split('::')
 title = splited_text[0].rstrip(' \xa0')
 author = splited_text[1].rstrip(' \xa0')
-print('Заголовок: ', title)
-print('Автор: ', author)
-print(image_link)
+#print('Заголовок: ', title)
+#print('Автор: ', author)
+#print(image_link)
+
 
 

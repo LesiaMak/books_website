@@ -17,9 +17,9 @@ def check_for_redirect(url):
 
 def download_txt(url, filename, folder="books"):
     os.makedirs(os.path.join('D:/Python/books_website/',folder), exist_ok=True)
-    filename = sanitize_filepath(os.path.join(folder, filename + '.txt'))
+    book_filename = sanitize_filepath(os.path.join(folder, filename + '.txt'))
     response = check_for_redirect(url)
-    with open(filename, 'w') as file:
+    with open(book_filename, 'w') as file:
         file.write(response.text)
     return filename
 
@@ -60,13 +60,26 @@ def get_title(url):
     else:
         raise requests.HTTPError("Book havent found")
 
+def get_comments(url):
+    response = requests.get(url, verify=False, allow_redirects=False)
+    response.raise_for_status()
+    soup = BeautifulSoup(response.text, 'lxml')
+    comments = soup.find_all('div', {'class': 'texts'})
+    for comment in comments:
+        comments_text = comment.text
+        splited_comments = comments_text.split(')')
+        actual_comments = splited_comments[-1]
+        filename = 'books/comments_{}'.format(get_title(url))
+        with open(filename, 'w') as file:
+            file.write(actual_comments)
+    return response
+
 for i in range(1, 10):
     try:
         title_url = 'https://tululu.org/b{}/'.format(i)
         txt_url = 'https://tululu.org/txt.php?id={}'.format(i)
-        image_link = get_image_link(title_url)
-        print(image_link)
-        image = download_image(title_url, image_link)
+        comments = get_comments(title_url)
+        print(comments)
     except requests.HTTPError:
         pass
 
