@@ -1,0 +1,4 @@
+Python==3.11*
+pathvalidate==3*
+BeautifulSoup4==4.12*
+urllib3==2.0*
