@@ -93,8 +93,8 @@ for i in range(args.start_id, args.end_id):
         txt_url = 'https://tululu.org/txt.php?id={}'.format(i)
         title = parse_book_page(title_url)['Заголовок']
         author = parse_book_page(title_url)['Автор']
-        print(title)
-        print(author)
+        print('Зоголовок: ', title)
+        print('Автор: ', author)
         book = download_txt(txt_url, title)
     except requests.HTTPError:
         pass
