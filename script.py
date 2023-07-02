@@ -34,20 +34,17 @@ def download_image(url, image_link, folder="images"):
     return filename
 
 
-
 def get_image_link(url):
     response = requests.get(url, verify=False, allow_redirects=False)
     response.raise_for_status()
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.text, 'lxml')
-        image_tag = soup.find('div', class_='bookimage').find('img')['src']
-        image_link = urljoin('https://tululu.org/',image_tag)
-        return image_link
-    else:
-        raise requests.HTTPError("Image havent found")
+    soup = BeautifulSoup(response.text, 'lxml')
+    image_tag = soup.find('div', class_='bookimage').find('img')['src']
+    image_link = urljoin('https://tululu.org/',image_tag)
+    return image_link
 
 
-def get_title(url):
+
+def parse_book_page(url):
     response = requests.get(url, verify=False, allow_redirects=False)
     response.raise_for_status()
     if response.status_code == 200:
@@ -55,14 +52,22 @@ def get_title(url):
         title_tag = soup.find('table', class_='tabs').find('td', class_='ow_px_td').find('h1')
         title_text = title_tag.text
         splited_text = title_text.split('::')
+        author = splited_text[1].strip(' \xa0')
         title = splited_text[0].rstrip(' \xa0')
         book_genre =[] 
         genres = soup.find('span', class_='d_book').find_all('a')
         for genre in genres:
             book_genre.append(genre.text)
-        return print(title), print(book_genre)
+        page = {
+            'Заголовок:': title,
+            'Автор: ': author,
+            'Жанр: ': book_genre,
+            }
+        return print(page)
     else:
         raise requests.HTTPError("Book havent found")
+    
+
 
 def get_comments(url):
     response = requests.get(url, verify=False, allow_redirects=False)
@@ -82,7 +87,7 @@ for i in range(1, 10):
     try:
         title_url = 'https://tululu.org/b{}/'.format(i)
         txt_url = 'https://tululu.org/txt.php?id={}'.format(i)
-        title = get_title(title_url)
+        page = parse_book_page(title_url)
     except requests.HTTPError:
         pass
 
