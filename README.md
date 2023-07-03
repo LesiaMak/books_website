@@ -8,10 +8,7 @@
 ```sh
 pip install -r requirements.txt
 ```
-и
-```
-$ pip install requests BeautifulSoup4 lxml
-```
+
 ### Аргументы
 
 Для работы со скриптом устанавливаются два аргумента: start_id и end_id. 
