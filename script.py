@@ -80,25 +80,27 @@ def parse_book_page(url):
     else:
         raise requests.HTTPError("Book havent found")
 
+def main():
+    parser = argparse.ArgumentParser(
+        description = 'Script downloads books')
+    parser.add_argument('start_id', help = "Стартовое id", default=1, type=int)
+    parser.add_argument('end_id', help = 'Финишное id', default=10, type=int)
+    args = parser.parse_args()
 
-parser = argparse.ArgumentParser(
-    description = 'Script downloads books')
-parser.add_argument('start_id', help = "Стартовое id", default=1, type=int)
-parser.add_argument('end_id', help = 'Финишное id', default=10, type=int)
-args = parser.parse_args()
+    for i in range(args.start_id, args.end_id):
+        try:
+            title_url = 'https://tululu.org/b{}/'.format(i)
+            txt_url = 'https://tululu.org/txt.php?id={}'.format(i)
+            title = parse_book_page(title_url)['Заголовок']
+            author = parse_book_page(title_url)['Автор']
+            print('Зоголовок: ', title)
+            print('Автор: ', author)
+            book = download_txt(txt_url, title)
+        except requests.HTTPError:
+            pass
 
-for i in range(args.start_id, args.end_id):
-    try:
-        title_url = 'https://tululu.org/b{}/'.format(i)
-        txt_url = 'https://tululu.org/txt.php?id={}'.format(i)
-        title = parse_book_page(title_url)['Заголовок']
-        author = parse_book_page(title_url)['Автор']
-        print('Зоголовок: ', title)
-        print('Автор: ', author)
-        book = download_txt(txt_url, title)
-    except requests.HTTPError:
-        pass
-
+if __name__=='__main__':
+    main()
 
 
 
