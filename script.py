@@ -14,11 +14,10 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 def check_for_redirect(response):
-    try:
-        response.raise_for_status()
-        return response
-    except requests.HTTPError:
-        raise('Book havent found')
+    if response.history is None:
+        raise('Book havent found') 
+    else:
+       return response
 
 
 def download_txt(payload, filename, folder="books"):
