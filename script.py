@@ -46,8 +46,9 @@ def download_image(url, image_link, folder="images"):
 def download_comments(url):
     response = requests.get(url, verify=False, allow_redirects=False)
     check_for_redirect(response)
-    filename = 'books/comments_{}'.format(get_page(parse_book_page(url))['Title'])
-    comments = " ".join(map(str, get_page(parse_book_page(url))['Comments']))
+    page = get_page(parse_book_page(url))
+    filename = 'books/comments_{}'.format(page['Title'])
+    comments = " ".join(map(str, page['Comments']))
     with open(filename, 'w') as file:
         file.write(comments)
     return response
@@ -100,8 +101,9 @@ def main():
             text_url ='https://tululu.org/txt.php'
             payload_url = {'id':'{}'.format(num)}
             title_url = 'https://tululu.org/b{}/'.format(num)
-            book = download_txt(payload_url, get_page(parse_book_page(title_url))['Title'])
-            image = download_image(title_url, get_page(parse_book_page(title_url))['Image link'])
+            page = get_page(parse_book_page(title_url))
+            book = download_txt(payload_url, page['Title'])
+            image = download_image(title_url, page['Image link'])
             comments = download_comments(title_url)
         except requests.HTTPError:
             print("Книга не найдена. Введите другой id", file=sys.stderr)
