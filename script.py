@@ -22,7 +22,7 @@ def check_for_redirect(response):
 
 def download_txt(payload, filename, folder="books"):
     os.makedirs(os.path.join('./',folder), exist_ok=True)
-    book_filename = sanitize_filepath(os.path.join(folder, filename + '.txt'))
+    book_filename = sanitize_filepath(os.path.join(folder, f'{filename}.txt'))
     response = requests.get('https://tululu.org/txt.php', params=payload, verify=False, allow_redirects=False)
     check_for_redirect(response)
     with open(book_filename, 'w') as file:
