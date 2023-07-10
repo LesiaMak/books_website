@@ -94,11 +94,11 @@ def main():
     parser.add_argument('end_id', help = 'Финишное id', default=10, type=int)
     args = parser.parse_args()
 
-    for id in range(args.start_id, args.end_id):
+    for num in range(args.start_id, args.end_id):
         try:
             text_url ='https://tululu.org/txt.php'
-            payload_url = {'id':'{}'.format(id)}
-            title_url = 'https://tululu.org/b{}/'.format(id)
+            payload_url = {'id':'{}'.format(num)}
+            title_url = 'https://tululu.org/b{}/'.format(num)
             book = download_txt(payload_url, get_page(parse_book_page(title_url))['Title'])
             image = download_image(title_url, get_page(parse_book_page(title_url))['Image link'])
             comments = download_comments(title_url)
