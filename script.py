@@ -60,7 +60,7 @@ def perse_page(parsed_page):
     author = splited_text[1].strip(' \xa0')
     title = splited_text[0].rstrip(' \xa0')
     image_tag = parsed_page.find('div', class_='bookimage').find('img')['src']
-    image_link = urljoin('tululu.org',image_tag)
+    image_link = urljoin('../',image_tag)
     comments = parsed_page.find_all('div', {'class': 'texts'})
     all_comments = []
     for comment in comments:
