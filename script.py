@@ -45,7 +45,7 @@ def download_image(url, image_link, folder="images"):
 def download_comments(url):
     response = requests.get(url, verify=False, allow_redirects=False)
     check_for_redirect(response)
-    page = get_page(parse_book_page(url))
+    page = parse_page(get_book_page(url))
     filename = 'books/comments_{}'.format(page['Title'])
     comments = " ".join(map(str, page['Comments']))
     with open(filename, 'w') as file:
@@ -53,7 +53,7 @@ def download_comments(url):
     return response
 
 
-def get_page(parsed_page):
+def perse_page(parsed_page):
     title_tag = parsed_page.find('table', class_='tabs').find('td', class_='ow_px_td').find('h1')
     title_text = title_tag.text
     splited_text = title_text.split('::')
@@ -80,7 +80,7 @@ def get_page(parsed_page):
     return page
     
 
-def parse_book_page(url):
+def get_book_page(url):
     response = requests.get(url, verify=False, allow_redirects=False)
     check_for_redirect(response)
     soup = BeautifulSoup(response.text, 'lxml')
@@ -100,7 +100,7 @@ def main():
             text_url ='https://tululu.org/txt.php'
             payload_url = {'id':'{}'.format(num)}
             title_url = 'https://tululu.org/b{}/'.format(num)
-            page = get_page(parse_book_page(title_url))
+            page = parse_page(get_book_page(title_url))
             book = download_txt(payload_url, page['Title'])
             image = download_image(title_url, page['Image link'])
             comments = download_comments(title_url)
