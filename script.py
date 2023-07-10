@@ -7,6 +7,7 @@ from pathvalidate import sanitize_filepath
 from urllib.parse import urljoin
 import urllib.request
 import argparse
+import time
 
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -106,6 +107,7 @@ def main():
             print("Книга не найдена. Введите другой id", file=sys.stderr)
         except requests.ConnectionError:
             print('Нет связи с сервером', file=sys.stderr)
+            time.sleep(5)
 
             
 
