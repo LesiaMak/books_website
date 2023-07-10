@@ -53,7 +53,7 @@ def download_comments(url):
     return response
 
 
-def perse_page(parsed_page):
+def parse_page(parsed_page):
     title_tag = parsed_page.find('table', class_='tabs').find('td', class_='ow_px_td').find('h1')
     title_text = title_tag.text
     splited_text = title_text.split('::')
