@@ -98,10 +98,10 @@ def main():
     for num in range(args.start_id, args.end_id):
         try:
             text_url ='https://tululu.org/txt.php'
-            payload_url = {'id':'{}'.format(num)}
+            text_payload = {'id':'{}'.format(num)}
             title_url = 'https://tululu.org/b{}/'.format(num)
             page = parse_page(get_book_page(title_url))
-            book = download_txt(payload_url, page['Title'])
+            book = download_txt(text_payload, page['Title'])
             image = download_image(title_url, page['Image link'])
             comments = download_comments(title_url)
         except requests.HTTPError:
