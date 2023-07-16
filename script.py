@@ -14,8 +14,8 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 def check_for_redirect(response):
-    if response.history is None:
-        raise('Book havent found') 
+    if response.history:
+        raise HTTPError('Book havent found') 
     else:
        return response
 
@@ -24,6 +24,7 @@ def download_txt(payload, filename, folder="books"):
     os.makedirs(os.path.join('./',folder), exist_ok=True)
     book_filename = sanitize_filepath(os.path.join(folder, f'{filename}.txt'))
     response = requests.get('https://tululu.org/txt.php', params=payload, verify=False, allow_redirects=False)
+    response.raise_for_status()
     check_for_redirect(response)
     with open(book_filename, 'w') as file:
         file.write(response.text)
@@ -36,6 +37,7 @@ def download_image(url, image_link, folder="images"):
     image_name = splited_link[-1]
     filename = sanitize_filepath(os.path.join(folder, image_name))
     response = requests.get(url, verify=False, allow_redirects=False)
+    response.raise_for_status()
     check_for_redirect(response)
     with open(filename, 'wb') as file:
          file.write(response.content)
@@ -71,17 +73,18 @@ def parse_page(parsed_page):
     genres = parsed_page.find('span', class_='d_book').find_all('a')
     book_genres = [genre.text for genre in genres]
     page = {
-        'Title': title,
-        'Author': author,
-        'Genre': book_genres,
-        'Image link': image_link,
-        'Comments': all_comments
+        'title': title,
+        'author': author,
+        'genre': book_genres,
+        'image link': image_link,
+        'comments': all_comments
         }
     return page
     
 
 def get_book_page(url):
     response = requests.get(url, verify=False, allow_redirects=False)
+    response.raise_for_status()
     check_for_redirect(response)
     soup = BeautifulSoup(response.text, 'lxml')
     return soup
