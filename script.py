@@ -31,12 +31,12 @@ def download_txt(payload, filename, folder="books"):
     return filename
 
 
-def download_image(url, image_link, folder="images"):
+def download_image(image_link, folder="images"):
     os.makedirs(os.path.join('./',folder), exist_ok=True)
     splited_link =image_link.split('/')
     image_name = splited_link[-1]
     filename = sanitize_filepath(os.path.join(folder, image_name))
-    response = requests.get(url, verify=False, allow_redirects=False)
+    response = requests.get(f'https://tululu.org/{image_link}', verify=False, allow_redirects=False)
     response.raise_for_status()
     check_for_redirect(response)
     with open(filename, 'wb') as file:
@@ -48,8 +48,8 @@ def download_comments(url):
     response = requests.get(url, verify=False, allow_redirects=False)
     check_for_redirect(response)
     page = parse_page(get_book_page(url))
-    filename = 'books/comments_{}'.format(page['Title'])
-    comments = " ".join(map(str, page['Comments']))
+    filename = 'books/comments_{}'.format(page['title'])
+    comments = " ".join(map(str, page['comments']))
     with open(filename, 'w') as file:
         file.write(comments)
     return response
@@ -61,7 +61,7 @@ def parse_page(parsed_page):
     splited_text = title_text.split('::')
     author = splited_text[1].strip(' \xa0')
     title = splited_text[0].rstrip(' \xa0')
-    image_tag = parsed_page.find('div', class_='bookimage').find('img')['src']
+    image_tag = parsed_page.find('td', class_='ow_px_td').find('div', class_='bookimage').find('img')['src']
     image_link = urljoin('../',image_tag)
     comments = parsed_page.find_all('div', {'class': 'texts'})
     all_comments = []
@@ -104,8 +104,8 @@ def main():
             text_payload = {'id':'{}'.format(num)}
             title_url = 'https://tululu.org/b{}/'.format(num)
             page = parse_page(get_book_page(title_url))
-            book = download_txt(text_payload, page['Title'])
-            image = download_image(title_url, page['Image link'])
+            text = download_txt(text_payload, page['title'])
+            image = download_image(page['image link'])
             comments = download_comments(title_url)
         except requests.HTTPError:
             print("Книга не найдена. Введите другой id", file=sys.stderr)
