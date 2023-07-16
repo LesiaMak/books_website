@@ -36,7 +36,7 @@ def download_image(image_link, folder="images"):
     splited_link =image_link.split('/')
     image_name = splited_link[-1]
     filename = sanitize_filepath(os.path.join(folder, image_name))
-    response = requests.get(f'https://tululu.org/{image_link}', verify=False, allow_redirects=False)
+    response = requests.get(image_link, verify=False, allow_redirects=False)
     response.raise_for_status()
     check_for_redirect(response)
     with open(filename, 'wb') as file:
@@ -45,14 +45,12 @@ def download_image(image_link, folder="images"):
 
 
 def download_comments(url):
-    response = requests.get(url, verify=False, allow_redirects=False)
-    check_for_redirect(response)
     page = parse_page(get_book_page(url))
     filename = 'books/comments_{}'.format(page['title'])
     comments = " ".join(map(str, page['comments']))
     with open(filename, 'w') as file:
         file.write(comments)
-    return response
+    return comments
 
 
 def parse_page(parsed_page):
@@ -62,7 +60,7 @@ def parse_page(parsed_page):
     author = splited_text[1].strip(' \xa0')
     title = splited_text[0].rstrip(' \xa0')
     image_tag = parsed_page.find('td', class_='ow_px_td').find('div', class_='bookimage').find('img')['src']
-    image_link = urljoin('../',image_tag)
+    image_link = urljoin('https://tululu.org',image_tag)
     comments = parsed_page.find_all('div', {'class': 'texts'})
     all_comments = []
     for comment in comments:
