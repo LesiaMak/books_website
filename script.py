@@ -98,7 +98,6 @@ def main():
 
     for num in range(args.start_id, args.end_id):
         try:
-            text_url ='https://tululu.org/txt.php'
             text_payload = {'id':'{}'.format(num)}
             title_url = 'https://tululu.org/b{}/'.format(num)
             page = parse_page(get_book_page(title_url))
