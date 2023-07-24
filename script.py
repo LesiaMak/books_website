@@ -99,9 +99,12 @@ def main():
             text_payload = {'id':'{}'.format(num)}
             title_url = 'https://tululu.org/b{}/'.format(num)
             book_page = parse_page(get_book_page(title_url))
-            download_txt(text_payload, book_page['title'])
-            download_image(title_url, book_page['image'])
-            download_comments(book_page['title'], book_page['comments'] )
+            book_title = book_page['title']
+            book_image = book_page['image']
+            book_comments = book_page['comments']
+            download_txt(text_payload, book_title)
+            download_image(title_url, book_image)
+            download_comments(book_title, book_comments)
         except requests.HTTPError:
             print("Книга не найдена. Введите другой id", file=sys.stderr)
         except requests.ConnectionError:
