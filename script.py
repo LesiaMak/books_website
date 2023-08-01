@@ -5,9 +5,9 @@ import sys
 from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filepath
 from urllib.parse import urljoin
-import urllib.request
 import argparse
 import time
+
 
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -27,7 +27,7 @@ def download_txt(payload, filename, folder="books"):
     book_filepath = sanitize_filepath(os.path.join(folder, f'{filename}.txt'))
     with open(book_filepath, 'w') as file:
         file.write(response.text)
-    return response
+    
 
 
 def download_image(url, image_url, folder="images"):
@@ -41,7 +41,7 @@ def download_image(url, image_url, folder="images"):
     check_for_redirect(response)
     with open(image_filepath, 'wb') as file:
          file.write(response.content)
-    return response
+    
 
 
 def download_comments(title, comments):
@@ -111,7 +111,7 @@ def main():
             print('Нет связи с сервером', file=sys.stderr)
             time.sleep(5)
 
-            
+          
 
 if __name__=='__main__':
     main()
