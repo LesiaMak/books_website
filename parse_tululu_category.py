@@ -7,6 +7,7 @@ from pathvalidate import sanitize_filepath
 from urllib.parse import urljoin
 import script
 import json
+import argparse
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -28,10 +29,15 @@ def write_json(parsed_book_page):
     
 
 def main():
+    parser = argparse.ArgumentParser(
+        description = 'Script downloads books')
+    parser.add_argument('--start_page', help = "Стартовая страница", default=1, type=int)
+    args = parser.parse_args()
+    parser.add_argument('--end_page', help = 'Финишная страница', default=args.start_page + 1, type=int)
+    args = parser.parse_args()
     book_pages = []
-    for num in range(1, 2, 1):
+    for num in range(args.start_page, args.end_page, 1):
         book_ids = parse_book_ids(get_book_page(f'https://tululu.org/l55/{num}'))
-        print(book_ids)
         try:
             for book_id in book_ids:
                 text_payload = {'id':'{}'.format(book_id.strip('/b'))}
@@ -39,7 +45,6 @@ def main():
                 book_page = script.parse_page(get_book_page(book_path))
                 book_title = book_page['title']
                 book_image = book_page['image']
-                book_comments = book_page['comments']
                 book_pages.append(book_page)
                 script.download_txt(text_payload, book_title)
                 script.download_image(book_path, book_image)
