@@ -53,12 +53,13 @@ def download_comments(title, comments):
 
 
 def parse_page(parsed_page):
-    title_tag = parsed_page.find('table', class_='tabs').find('td', class_='ow_px_td').find('h1')
+    title_tag = parsed_page.select_one(".tabs .ow_px_td h1")
     title_text = title_tag.text
     splited_text = title_text.split('::')
     author = splited_text[1].strip(' \xa0')
     title = splited_text[0].rstrip(' \xa0')
-    image_url = parsed_page.find('td', class_='ow_px_td').find('div', class_='bookimage').find('img')['src']
+    image_selector = parsed_page.select_one(".ow_px_td .bookimage img")
+    image_url = image_selector.get('src')
     comments = parsed_page.find_all('div', {'class': 'texts'})
     all_comments = []
     for comment in comments:
@@ -66,7 +67,7 @@ def parse_page(parsed_page):
         splited_comments = comments_text.split(')')
         actual_comments = splited_comments[-1]
         all_comments.append(actual_comments)
-    genres = parsed_page.find('span', class_='d_book').find_all('a')
+    genres = parsed_page.select('span.d_book a')    
     book_genres = [genre.text for genre in genres]
     page = {
         'title': title,

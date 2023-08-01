@@ -17,8 +17,8 @@ def get_book_page(url):
     return soup
 
 def parse_book_ids(parsed_page):
-    book_tags = parsed_page.find_all('div', class_='bookimage')
-    id_tags = [tag.find('a')['href'] for tag in book_tags]
+    book_tags = parsed_page.select("div.bookimage a")
+    id_tags = [tag.get('href') for tag in book_tags]
     return id_tags
 
 def write_json(parsed_book_page):
@@ -29,8 +29,9 @@ def write_json(parsed_book_page):
 
 def main():
     book_pages = []
-    for num in range(1, 40, 1):
+    for num in range(1, 2, 1):
         book_ids = parse_book_ids(get_book_page(f'https://tululu.org/l55/{num}'))
+        print(book_ids)
         try:
             for book_id in book_ids:
                 text_payload = {'id':'{}'.format(book_id.strip('/b'))}
