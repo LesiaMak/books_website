@@ -39,18 +39,16 @@ def main():
                 for book_link in book_links:
                     text_payload = {'id':'{}'.format(book_link.strip('/b'))}
                     book_path = (f'https://tululu.org{book_link}')
-                    print(book_path)
                     book_page = parse_tululu_books.parse_page(parse_tululu_books.get_book_page(book_path))
                     book_title = book_page['title']
                     book_image = book_page['image']
                     book_pages.append(book_page)
-                    if args.skip_img:
-                        parse_tululu_books.download_txt(text_payload, book_title)
-                    if args.skip_text:
-                        parse_tululu_books.download_image(book_path, book_image)               
-                    else:
-                        parse_tululu_books.download_txt(text_payload, book_title)
-                        parse_tululu_books.download_image(book_path, book_image)
+                    try:
+                        parse_tululu_books.download_txt(text_payload, book_title) if args.skip_img else parse_tululu_books.download_image(book_path, book_image)
+                        parse_tululu_books.download_image(book_path, book_image) if args.skip_text else parse_tululu_books.download_txt(text_payload, book_title)
+                    except requests.exceptions.ConnectionError:
+                        print('Нет связи с сервером', file=sys.stderr)
+                        time.sleep(5)
             except requests.HTTPError:
                 print("Книга не найдена. Введите другой id", file=sys.stderr)
             except requests.exceptions.ConnectionError:

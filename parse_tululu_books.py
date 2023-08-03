@@ -82,6 +82,8 @@ def parse_page(parsed_page):
 def get_book_page(url):
     response = requests.get(url, verify=False, allow_redirects=True)
     response.raise_for_status()
+    if response.history:
+        raise requests.exceptions.HTTPError
     soup = BeautifulSoup(response.text, 'lxml')
     return soup
 
