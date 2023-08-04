@@ -29,6 +29,7 @@ def main():
     parser.add_argument('--end_page', help = 'Финишная страница', default=701, type=int)
     parser.add_argument('--skip_img', help = 'Не скачивать картинки', action="store_true", default=False)
     parser.add_argument('--skip_text', help = 'Не скачивать текст', action="store_true", default=False)
+    parser.add_argument('--dest_folder', help = 'Путь к каталогу с картинками, книгами, JSON.', action="store_true", default=False)
     args = parser.parse_args()
 
     book_pages = []
@@ -54,6 +55,8 @@ def main():
             except requests.exceptions.ConnectionError:
                 print('Нет связи с сервером', file=sys.stderr)
         write_json(book_pages)
+        if args.dest_folder:
+            print(os.getcwd())
     except requests.exceptions.ConnectionError:
         print('Нет связи с сервером', file=sys.stderr)
         time.sleep(5)

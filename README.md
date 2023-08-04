@@ -44,7 +44,11 @@ py parse_tululu_category.py --start_page 15 --end_page 20 --skip_img
   ```python
 py parse_tululu_category.py --start_page 15 --end_page 20 --skip_text
   ```  
-
+* --dest_folder - Если настрайка указана, то скрипт выводит путь к директории, содержащей книги, изображения обложки и JSON файл с описанием скачаных книг.
+    Пример запуска:
+    ```python
+py parse_tululu_category.py --start_page 15 --end_page 20 --dest_folder
+  ``` 
 Пример запуска:
 
 ![parse_tululu_category](https://github.com/LesiaMak/books_website/assets/101565600/2cc0b7ef-ecfd-4035-8660-1b828d30df15)
