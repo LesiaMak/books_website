@@ -39,6 +39,7 @@ def main():
                 book_links = parse_book_links(parse_tululu_books.get_book_page(f'https://tululu.org/l55/{num}'))
             except requests.exceptions.ConnectionError:
                 print('Нет связи с сервером', file=sys.stderr)
+                
                 for book_link in book_links:
                     try:
                         text_payload = {'id':'{}'.format(book_link.strip('/b'))}
@@ -46,11 +47,13 @@ def main():
                         book_page = parse_tululu_books.parse_page(parse_tululu_books.get_book_page(book_path))
                         book_title = book_page['title']
                         book_image = book_page['image']
-                        book_pages.append(book_page)                    
+                        book_pages.append(book_page)
+
                         if args.skip_img: parse_tululu_books.download_txt(text_payload, book_title) 
                         else: parse_tululu_books.download_image(book_path, book_image)
                         if args.skip_text: parse_tululu_books.download_image(book_path, book_image)
                         else: parse_tululu_books.download_txt(text_payload, book_title)
+
                     except requests.HTTPError:
                         print("Книга не найдена. Введите другой id", file=sys.stderr)
                     except requests.exceptions.ConnectionError:
