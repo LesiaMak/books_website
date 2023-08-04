@@ -47,8 +47,10 @@ def main():
                         book_title = book_page['title']
                         book_image = book_page['image']
                         book_pages.append(book_page)                    
-                        parse_tululu_books.download_txt(text_payload, book_title) if args.skip_img else parse_tululu_books.download_image(book_path, book_image)
-                        parse_tululu_books.download_image(book_path, book_image) if args.skip_text else parse_tululu_books.download_txt(text_payload, book_title)
+                        if args.skip_img: parse_tululu_books.download_txt(text_payload, book_title) 
+                        else: parse_tululu_books.download_image(book_path, book_image)
+                        if args.skip_text: parse_tululu_books.download_image(book_path, book_image)
+                        else: parse_tululu_books.download_txt(text_payload, book_title)
                     except requests.HTTPError:
                         print("Книга не найдена. Введите другой id", file=sys.stderr)
                     except requests.exceptions.ConnectionError:
