@@ -36,8 +36,11 @@ def main():
     for num in range(args.start_page, args.end_page, 1):
         try:
             book_links = parse_book_links(parse_tululu_books.get_book_page(f'https://tululu.org/l55/{num}'))
+        except requests.HTTPError:
+            print('Страница не найдена', file=sys.stderr)
         except requests.exceptions.ConnectionError:
             print('Нет связи с сервером', file=sys.stderr)
+            time.sleep(5)
 
             for book_link in book_links:
                 try:
