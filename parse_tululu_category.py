@@ -46,12 +46,10 @@ def main():
                     book_pages.append(book_page)
 
                     if not args.skip_img:
-                        parse_tululu_books.download_image(book_path, book_image)
-                        continue                       
+                        parse_tululu_books.download_image(book_path, book_image)                    
 
                     if not args.skip_text:
                         parse_tululu_books.download_txt(text_payload, book_title)
-                        continue                        
 
                 except requests.HTTPError:
                     print("Книга не найдена. Введите другой id", file=sys.stderr)
